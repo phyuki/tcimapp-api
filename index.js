@@ -11,6 +11,10 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.get('/teste', async(req,res) => {
+     res.send(JSON.stringify('OK!'))
+})
+
 app.post('/register', async(req,res) => {
 
     const [user, created] = await model.users.findOrCreate({
@@ -22,13 +26,12 @@ app.post('/register', async(req,res) => {
     })
 
     if(created)
-         res.send(JSON.stringify('O usuário foi cadastrado com sucesso!'))
+     res.status(200).json({ alert: "Sucesso", message: "O usuário foi cadastrado com sucesso!" })
     else
-         res.send(JSON.stringify('Email já cadastrado no sistema'))
+     res.status(400).json({ alert: "Aviso", message: "Email já cadastrado no sistema" })
 })
 
 app.get('/login', async(req,res) => {
-
     const exists = await model.users.findOne({ where: { 
          email: req.query.emailUser, 
          password: req.query.passwordUser } 
@@ -159,18 +162,25 @@ app.put('/patients', async(req,res) => {
 
 app.post('/patients', async(req,res) => {
     
-    const newPatient = await model.patients.create(
-         {
-              name: req.body.name,
-              phone: req.body.phone,
-              email: req.body.email,
-              address: req.body.address,
-              professionalId: req.body.professionalId
-         })
-    
-    if(newPatient){
-         res.send(JSON.stringify(newPatient))
-    }
+     const exists = await model.patients.findOne({
+          where: { email: req.body.email }
+     })
+     
+     if(!exists){
+          const newPatient = await model.patients.create(
+               {
+                    name: req.body.name,
+                    phone: req.body.phone,
+                    email: req.body.email,
+                    address: req.body.address,
+                    professionalId: req.body.professionalId
+               })
+          
+          if(newPatient){
+               res.send(JSON.stringify(newPatient))
+          }
+     }
+     else res.send(JSON.stringify(null))
 })
 
 app.get('/dass', async(req,res) => {
@@ -184,24 +194,19 @@ app.get('/dass', async(req,res) => {
 })
 
 app.post('/dass', async(req,res) => {
-
-    const mysql = require('mysql2/promise');
-    const connection = await mysql.createConnection({ host: 'localhost', user: 'root', password: '', database: 'scidapp' });     
-
-    const scoreA = req.body.scoreA; 
-    const scoreD = req.body.scoreD; 
-    const scoreE = req.body.scoreE; 
-    const patientId = req.body.patientId; 
-
-    const query = 'INSERT INTO dassscores (scoreA, scoreD, scoreE, patientId, createdAt, updatedAt) VALUES (?, ?, ?, ?, NOW(), NOW())';
-    const values = [scoreA, scoreD, scoreE, patientId];
-
-    await connection.execute(query, values);
-    await connection.end();
-
-    res.send(JSON.stringify("Success"))
-
-})
+    
+     const report = await model.dassscores.create(
+          {
+               scoreA: req.body.scoreA,
+               scoreD: req.body.scoreD,
+               scoreE: req.body.scoreE,
+               patientId: req.body.patientId
+          })
+     
+     if(report){
+          res.send(JSON.stringify(report))
+     }
+ })
 
 app.get('/disorders', async(req,res) => {
 
@@ -237,47 +242,71 @@ app.get('/reports', async(req,res) => {
     const exists = await model.scidscores.findAll({
          where: { patientId: req.query.patient }
     })
-
+    
     if(exists){
          const allItems = exists.map(item => {
               const date = new Date(item.dataValues.createdAt)
               const onlyDate = date.toISOString().split('T')[0]
               return [item.dataValues.lifetime_criteria, item.dataValues.past_criteria, 
               item.dataValues.disorder, onlyDate]})
-         res.json(allItems)
+          let allDisorders = 0, index = 0
+          const allItemsByDate = allItems.reduce((acc, curr) => {
+               if (allDisorders === 0) 
+                 acc[index] = []
+               acc[index].push(curr)
+               if(allDisorders === 13){
+                    allDisorders = -1
+                    index++
+               }
+               allDisorders++
+               return acc
+             }, {})
+          const resp = Object.values(allItemsByDate).map(subArray => subArray.flat())
+          res.json(resp)
     }
     else res.json('')
 })
 
+app.get('/reportsByDisorder', async(req,res) => {
+
+     const exists = await model.scidscores.findAll({
+          where: { patientId: req.query.patient,
+               disorder: req.query.disorder }
+     })
+     
+     if(exists){
+          const allItems = exists.map(item => {
+               const date = new Date(item.dataValues.createdAt)
+               const onlyDate = date.toISOString().split('T')[0]
+               return [item.dataValues.lifetime_criteria, item.dataValues.past_criteria, onlyDate]
+          })
+
+          res.json(allItems)
+     }
+     else res.json('')
+ })
+
 app.post('/reports', async(req,res) => {
     
-    const report = await model.scidscores.create(
-         {
-              lifetime_criteria: req.body.lifetime,
-              past_criteria: req.body.past,
-              disorder: req.body.disorder,
-              patientId: req.body.patientId
-         })
-    
-    if(report){
-         res.send(JSON.stringify(report))
-    }
-})
+     const disorders = req.body.disorders
+     const scores = req.body.scores
+     const patientId = req.body.patientId
+     const reportScores = scores.map((scores, index) => ({lifetime_criteria: scores[0], 
+          past_criteria: scores[1], disorder: disorders[index], patientId}))
 
-app.post('/answers', async(req,res) => {
-    
-    const disorder = req.body.disorder
-    const answers = req.body.answers
-    const patientId = req.body.patientId
-    const questionId = req.body.questionId
+     const savedScores = await model.scidscores.bulkCreate(reportScores)
 
-    const reportDetails = questionId.map((questionId, index) => ({questionId, answer: answers[index],
-                                                      patientId, disorder}))
+     const answers = req.body.answers
+     const questionId = req.body.questionId
+     let savedAnswers = []
+     for(let i=0; i<14; i++){
+          const details = questionId[i].map((questionId, index) => ({questionId, 
+               answer: answers[i][index], patientId, disorder: disorders[i]}))
+          savedAnswers = await model.scidanswers.bulkCreate(details)
+     }
 
-    const report = await model.scidanswers.bulkCreate(reportDetails)
-    
-    if(report){
-         res.send(JSON.stringify(report))
+     if(savedScores && savedAnswers){
+         res.send(JSON.stringify(savedScores))
     }
 })
 
