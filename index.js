@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const Sequelize = require('sequelize')
 const model = require('./models')
-const sequelize = new Sequelize('mysql://root:root@0.tcp.sa.ngrok.io:12557/tcimapp')
 const port = process.env.PORT || 3000
 
 let app = express()
