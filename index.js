@@ -242,7 +242,7 @@ app.get('/reports', async(req,res) => {
           order: [['createdAt', 'DESC']],
           where: { patientId: req.query.patient }
     })
-    
+    console.log(exists.dataValues)
     if(exists){
          const allItems = exists.map(item => {
               const date = new Date(item.dataValues.createdAt)
