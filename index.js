@@ -239,7 +239,6 @@ app.get('/dassscores', async(req,res) => {
 app.get('/reports', async(req,res) => {
 
     const exists = await model.scidscores.findAll({
-          order: [['createdAt', 'DESC']],
           where: { patientId: req.query.patient }
     })
     console.log(exists.dataValues)
