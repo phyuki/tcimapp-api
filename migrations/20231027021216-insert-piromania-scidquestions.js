@@ -47,7 +47,7 @@ module.exports = {
       'Os furtos ocorreram somente quando você estava se sentindo agitada(o)/eufórica(o) ou irritável?',
       'Você apresentou esses problemas relacionados à provocação de incêndios durante o mês passado?',
       'Como você classificaria a gravidade da Piromania desse paciente?',
-      'Se os critérios atuais não estiverem totalmente presentes, como você classificaria o status atual do paciente?,
+      'Se os critérios atuais não estiverem totalmente presentes, como você classificaria o status atual do paciente?',
       'Quando você provocou seu último incêndio, desejou ou pensou em provocar um incêndio?',
       'Quantos anos você tinha quando provocou seu primeiro incêndio?');
     `);

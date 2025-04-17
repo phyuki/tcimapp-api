@@ -8,7 +8,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
-const sequelize = new Sequelize('mysql://root:root@0.tcp.sa.ngrok.io:17057/tcimapp')
+const sequelize = new Sequelize('mysql://user:root@localhost:3306/tcimapp')
 
 //let sequelize;
 //if (config.use_env_variable) {
