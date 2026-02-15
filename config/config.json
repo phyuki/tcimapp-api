@@ -1,0 +1,14 @@
+{
+  "development": {
+    "username": "user",
+    "password": "root",
+    "database": "tcimapp",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "use_env_variable": "DB_URL",
+    "database": "tcimapp",
+    "dialect": "mysql"
+  }
+}
