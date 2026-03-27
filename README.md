@@ -66,3 +66,49 @@ Assim que a conexão estiver funcionando, as migrações podem ser executadas co
 ```bash
 npx sequelize db:migrate
 ```
+
+---
+
+## Rotas
+- Operações básicas de cadastro (CRUD - Create, Read, Update and Delete)
+- Padrão **RESTful**
+Para simplificar o processo de desenvolvimento, as rotas podem ser acessadas sem controle de acesso, removendo a etapa de validação de tokens, por exemplo.
+
+### Exemplos
+
+- GET - /reportsByDisorder?patient=1&disorder="TEI"
+- Patient -> Filtra os dados de acordo com o id do paciente escolhido
+- Disorder -> Filtra os dados de acordo com o transtorno selecionado
+- Descrição: Retorna o relatório, isto é, a lista dos scores de cada entrevista do paciente.
+- Response (200 OK):
+```bash
+[
+  ["1", "1", "19/03/2026"],
+  ["1", "3", "22/01/2026"],
+  ["3", "3", "23/03/2025"],
+]
+```
+
+POST - /patients
+- Descrição: Cadastro de pacientes
+- Request Body:
+```bash
+{
+  "name": "Jane Doe",
+  "phone": "73999999999",
+  "email": "teste@email.com",
+  "address": "Rua ABC, 123",
+  "professionalId": 3
+}
+```
+
+PUT - /professionals
+- Descrição: Atualização dos dados de um profissional da saúde
+```bash
+{
+  "id": 1,
+  "name": "Jane Doe",
+  "phone": "73999999999",
+  "email": "teste@email.com",
+}
+```
