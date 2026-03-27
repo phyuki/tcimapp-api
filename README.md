@@ -56,7 +56,7 @@ Após a implantação do banco, é simples permitir a conexão da API a partir d
 Eis um exemplo:
 
 ```bash
-DB_URL="postgresql://usuario:senha@host:5432/nome_do_banco"
+DB_URL="mysql://usuario:senha@host:5432/nome_do_banco"
 ```
 
 ### Execução das Migrações
