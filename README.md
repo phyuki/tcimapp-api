@@ -46,22 +46,17 @@ npm run dev
 ## Configuração do Banco de Dados
 
 - Estruturado em **MySQL**
-- A única configuração manual necessária é a criação do banco no ambiente de escolha.
+- A única configuração manual necessária é a criação do banco no ambiente de escolha com o nome `tcimapp`.
 - As tabelas e seus conteúdos serão inseridos de acordo com migrações
 - ORM utilizado: **Sequelize**
-- A configuração da conexão entre servidor e banco está contido no arquivo `config.json`.
 
 ### Estrutura do arquivo de configuração
 
-Este arquivo deve ser criado com as informações geradas de acesso ao banco após a implantação do mesmo.
+Após a implantação do banco, é simples permitir a conexão da API a partir da URL gerada com as credenciais de acesso.
+Eis um exemplo:
 
 ```bash
-{
-  "username": "user",
-  "password": "root",
-  "database": "tcimapp",
-  "host": "127.0.0.1",
-}
+DB_URL="postgresql://usuario:senha@host:5432/nome_do_banco"
 ```
 
 ### Execução das Migrações
