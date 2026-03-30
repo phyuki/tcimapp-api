@@ -28,7 +28,7 @@ Detalhes da stack e integrações:
 
 ## Execução do código
 
-Para execução do serviço é necessário configurar as variáveis de ambiente:
+Para execução do serviço, é necessário configurar as variáveis de ambiente:
 
 - `NODE_ENV`: string contendo o ambiente de implantação (development | production).
 - `DB_URL`: string de conexão com o banco de dados.
@@ -65,6 +65,24 @@ Assim que a conexão estiver funcionando, as migrações podem ser executadas co
 
 ```bash
 npx sequelize db:migrate
+```
+
+---
+
+## Execução em ambiente
+
+Resumidamente, com os fatores vistos anteriormente, tem-se que executar 3 etapas em sequência:
+- Setup: Instalar dependências do servidor antes da execução:
+```bash 
+npm install
+```
+- Banco de dados: Configurar conexão com o servidor a partir das variáveis de ambiente e realizar as migrações
+```bash 
+npx sequelize db:migrate
+```
+- Executar o servidor 
+```bash 
+npm run start | node index.js
 ```
 
 ---
