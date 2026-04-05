@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    return queryInterface.createTable('dassanswers', {
+  async up(queryInterface, Sequelize) {
+    return queryInterface.createTable("dassanswers", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -16,18 +16,18 @@ module.exports = {
       patientId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'patients',
-          key: 'id',
+          model: "patients",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
+        onUpdate: "CASCADE",
       },
       questionId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'dassquestions',
-          key: 'id',
+          model: "dassQuestions",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
+        onUpdate: "CASCADE",
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -40,7 +40,7 @@ module.exports = {
     });
   },
 
-  async down (queryInterface, Sequelize) {
-    return queryInterface.dropTable('dassanswers');
-  }
+  async down(queryInterface, Sequelize) {
+    return queryInterface.dropTable("dassanswers");
+  },
 };

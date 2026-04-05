@@ -10,5 +10,10 @@
     "use_env_variable": "DB_URL",
     "database": "tcimapp",
     "dialect": "mysql"
+  },
+  "releasing": {
+    "use_env_variable": "DB_URL",
+    "database": "tcimapp",
+    "dialect": "mysql"
   }
 }

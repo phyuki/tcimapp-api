@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    container_name: tcimapp_api
+    ports:
+      - "5050:5050"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tcimapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+    ports:
+      - "5051:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

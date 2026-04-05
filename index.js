@@ -65,6 +65,6 @@ app.post("/details", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log("Servidor está rodando...");
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Servidor está rodando na porta ${port}`);
 });

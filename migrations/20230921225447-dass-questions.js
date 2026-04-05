@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     return queryInterface.sequelize.query(`
-      INSERT INTO dassquestions (question, createdAt, updatedAt)
+      INSERT INTO dassQuestions (question, createdAt, updatedAt)
       VALUES
         ('Achei difícil me acalmar', NOW(), NOW()),
         ('Senti minha boca seca', NOW(), NOW()),
@@ -30,9 +30,9 @@ module.exports = {
     `);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.query(`
-      DELETE FROM dassquestions WHERE question IN ('Achei difícil me acalmar',
+      DELETE FROM dassQuestions WHERE question IN ('Achei difícil me acalmar',
       'Senti minha boca seca',
       'Não consegui vivenciar nenhum sentimento positivo',
       'Tive dificuldade em respirar em alguns momentos (ex. respiração ofegante, falta de ar, sem ter feito nenhum esforço físico)',
@@ -54,5 +54,5 @@ module.exports = {
       'Senti medo sem motivo',
       'Senti que a vida não tinha sentido');
     `);
-  }
+  },
 };
