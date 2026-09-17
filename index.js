@@ -18,6 +18,33 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const apiToken = process.env.API_TOKEN;
+
+app.use((req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token =
+    typeof authHeader === "string"
+      ? authHeader.replace(/^Bearer\s+/i, "").trim()
+      : "";
+
+  if (!apiToken) {
+    return res
+      .status(500)
+      .json({ message: "API_TOKEN não configurado no ambiente." });
+  }
+
+  if (
+    !authHeader ||
+    !authHeader.toLowerCase().startsWith("bearer ") ||
+    !token ||
+    token !== apiToken
+  ) {
+    return res.status(401).json({ message: "Acesso não autorizado." });
+  }
+
+  next();
+});
+
 app.use("/auth", authRoutes);
 app.use("/professionals", professionalRoutes);
 app.use("/patients", patientRoutes);

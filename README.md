@@ -33,6 +33,7 @@ Para execução do serviço, é necessário configurar as variáveis de ambiente
 - `NODE_ENV`: string contendo o ambiente de implantação (development | production).
 - `DB_URL`: string de conexão com o banco de dados.
 - `PORT`: porta onde a aplicação será executada (default: 3000).
+- `API_TOKEN`: token único exigido como `Authorization: Bearer <token>` para todas as rotas.
 
 ### Executando localmente
 
@@ -72,25 +73,32 @@ npx sequelize db:migrate
 ## Execução em ambiente
 
 Resumidamente, com os fatores vistos anteriormente, tem-se que executar 3 etapas em sequência:
+
 - Setup: Instalar dependências do servidor antes da execução:
-```bash 
+
+```bash
 npm install
 ```
+
 - Banco de dados: Configurar conexão com o servidor a partir das variáveis de ambiente e realizar as migrações
-```bash 
+
+```bash
 npx sequelize db:migrate
 ```
-- Executar o servidor 
-```bash 
+
+- Executar o servidor
+
+```bash
 npm run start | node index.js
 ```
 
 ---
 
 ## Rotas
+
 - Operações básicas de cadastro (CRUD - Create, Read, Update and Delete)
 - Padrão **RESTful**
-Para simplificar o processo de desenvolvimento, as rotas podem ser acessadas sem controle de acesso, removendo a etapa de validação de tokens, por exemplo.
+  Para simplificar o processo de desenvolvimento, as rotas podem ser acessadas sem controle de acesso, removendo a etapa de validação de tokens, por exemplo.
 
 ### Exemplos
 
@@ -99,6 +107,7 @@ Para simplificar o processo de desenvolvimento, as rotas podem ser acessadas sem
 - Disorder -> Filtra os dados de acordo com o transtorno selecionado
 - Descrição: Retorna o relatório, isto é, a lista dos scores de cada entrevista do paciente.
 - Response (200 OK):
+
 ```bash
 [
   ["1", "1", "19/03/2026"],
@@ -108,8 +117,10 @@ Para simplificar o processo de desenvolvimento, as rotas podem ser acessadas sem
 ```
 
 POST - /patients
+
 - Descrição: Cadastro de pacientes
 - Request Body:
+
 ```bash
 {
   "name": "Jane Doe",
@@ -121,7 +132,9 @@ POST - /patients
 ```
 
 PUT - /professionals
+
 - Descrição: Atualização dos dados de um profissional da saúde
+
 ```bash
 {
   "id": 1,
